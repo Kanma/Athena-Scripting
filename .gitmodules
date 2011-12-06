@@ -4,3 +4,6 @@
 [submodule "dependencies/UnitTest++"]
 	path = dependencies/UnitTest++
 	url = git://github.com/Kanma/UnitTest-cpp.git
+[submodule "dependencies/v8"]
+	path = dependencies/v8
+	url = git://github.com/Kanma/v8.git
