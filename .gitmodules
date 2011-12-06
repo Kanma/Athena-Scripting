@@ -1,3 +1,6 @@
 [submodule "dependencies/XMake"]
 	path = dependencies/XMake
 	url = git://github.com/Kanma/XMake.git
+[submodule "dependencies/UnitTest++"]
+	path = dependencies/UnitTest++
+	url = git://github.com/Kanma/UnitTest-cpp.git
