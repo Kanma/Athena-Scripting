@@ -63,3 +63,5 @@ include("${XMAKE_DEPENDENCIES_DIR}/XMake/XMake.cmake")
 # Process subdirectories
 
 add_subdirectory(dependencies)
+add_subdirectory(src)
+add_subdirectory(unittests)
