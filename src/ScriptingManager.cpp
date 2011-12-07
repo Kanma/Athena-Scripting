@@ -130,7 +130,8 @@ Handle<Value> ScriptingManager::executeFile(const std::string& strFileName, Pers
     size_t size = stream.tellg();
     stream.seekg(0, std::ios::beg);
 
-    char* pBuffer = new char[size];
+    char* pBuffer = new char[size + 1];
+    pBuffer[size] = 0;
     stream.read(pBuffer, size);
 	
     stream.close();
