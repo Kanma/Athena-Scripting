@@ -144,4 +144,45 @@ SUITE(ScriptingManagerTests)
         
         myContext.Dispose();
 	}
+
+
+	TEST_FIXTURE(ScriptingTestEnvironment, ExecuteUnknownFile)
+	{
+        HandleScope handle_scope;
+
+		Handle<Value> result = pScriptingManager->executeFile("unknown.js");
+
+        CHECK(result.IsEmpty());
+        CHECK(!pScriptingManager->getLastError().empty());
+	}
+
+
+	TEST_FIXTURE(ScriptingTestEnvironment, ExecuteFile)
+	{
+        HandleScope handle_scope;
+
+		Handle<Value> result = pScriptingManager->executeFile(ATHENA_SCRIPTING_UNITTESTS_SCRIPTS_PATH "simple.js");
+
+        CHECK(!result.IsEmpty());
+        CHECK(!result->ToInt32().IsEmpty());
+        CHECK_EQUAL(15, result->ToInt32()->Value());
+        CHECK(pScriptingManager->getLastError().empty());
+	}
+
+
+	TEST_FIXTURE(ScriptingTestEnvironment, ExecuteFileUsingOwnContext)
+	{
+        HandleScope handle_scope;
+
+        Persistent<Context> myContext = Context::New();
+
+		Handle<Value> result = pScriptingManager->executeFile(ATHENA_SCRIPTING_UNITTESTS_SCRIPTS_PATH "simple.js", myContext);
+
+        CHECK(!result.IsEmpty());
+        CHECK(!result->ToInt32().IsEmpty());
+        CHECK_EQUAL(15, result->ToInt32()->Value());
+        CHECK(pScriptingManager->getLastError().empty());
+
+        myContext.Dispose();
+	}
 }

@@ -7,6 +7,7 @@
 #include <Athena-Scripting/ScriptingManager.h>
 #include <Athena-Core/Log/LogManager.h>
 #include <iostream>
+#include <fstream>
 
 
 using namespace Athena::Scripting;
@@ -69,6 +70,10 @@ ScriptingManager* ScriptingManager::getSingletonPtr()
 
 Handle<Value> ScriptingManager::execute(const std::string& strScript, Persistent<Context> context)
 {
+    // Assertions
+    assert(!strScript.empty());
+
+    // Initialisations
     m_strLastError = "";
 
     // Create a stack-allocated handle scope
@@ -101,4 +106,39 @@ Handle<Value> ScriptingManager::execute(const std::string& strScript, Persistent
 
     // Return the result
     return handle_scope.Close(result);
+}
+
+
+Handle<Value> ScriptingManager::executeFile(const std::string& strFileName, Persistent<Context> context)
+{
+    // Assertions
+    assert(!strFileName.empty());
+
+    // Declarations
+    std::ifstream stream;
+    
+    // Open the file
+    stream.open(strFileName.c_str(), ios_base::in);
+    if (!stream.is_open())
+    {
+        m_strLastError = "Can't file the file '" + strFileName + "'";
+        return Handle<Value>();
+    }
+
+    // Load the content
+    stream.seekg(0, std::ios::end);
+    size_t size = stream.tellg();
+    stream.seekg(0, std::ios::beg);
+
+    char* pBuffer = new char[size];
+    stream.read(pBuffer, size);
+	
+    stream.close();
+
+    // Execute the script
+    Handle<Value> result = execute(pBuffer, context);
+
+    delete[] pBuffer;
+
+    return result;
 }

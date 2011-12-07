@@ -66,6 +66,17 @@ public:
 	                              v8::Persistent<v8::Context> context = v8::Persistent<v8::Context>());
 
     //------------------------------------------------------------------------------------
+    /// @brief	Execute the JavaScript code contained in a file
+    ///
+    /// @param	strFileName	Path of the script to execute
+    /// @param	context	    Context in which to execute the script, empty to use the main
+    ///                     one
+    /// @return				'true' if successful
+    //------------------------------------------------------------------------------------
+	v8::Handle<v8::Value> executeFile(const std::string& strFileName,
+	                                  v8::Persistent<v8::Context> context = v8::Persistent<v8::Context>());
+
+    //------------------------------------------------------------------------------------
     /// @brief	Return the error message of the last error that occured
     //------------------------------------------------------------------------------------
     inline std::string getLastError() const
