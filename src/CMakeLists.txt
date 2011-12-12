@@ -1,5 +1,6 @@
 # List the source files
 set(SRCS ScriptingManager.cpp
+         Functions.cpp
 )
 
 

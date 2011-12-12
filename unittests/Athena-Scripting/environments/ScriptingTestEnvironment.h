@@ -7,6 +7,7 @@
 struct ScriptingTestEnvironment
 {
     Athena::Scripting::ScriptingManager* pScriptingManager;
+    v8::Persistent<v8::Context>          context;
 
 	ScriptingTestEnvironment()
 	: pScriptingManager(0)
@@ -16,6 +17,9 @@ struct ScriptingTestEnvironment
 
 	~ScriptingTestEnvironment()
 	{
+	    if (!context.IsEmpty())
+            context.Dispose();
+	    
         delete pScriptingManager;
 	}
 };

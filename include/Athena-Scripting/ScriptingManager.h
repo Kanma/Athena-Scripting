@@ -60,10 +60,10 @@ public:
     /// @param	strScript	The script to execute
     /// @param	context	    Context in which to execute the script, empty to use the main
     ///                     one
-    /// @return				'true' if successful
+    /// @return				The return value of the script
     //------------------------------------------------------------------------------------
 	v8::Handle<v8::Value> execute(const std::string& strScript,
-	                              v8::Persistent<v8::Context> context = v8::Persistent<v8::Context>());
+	                              v8::Handle<v8::Context> context = v8::Handle<v8::Context>());
 
     //------------------------------------------------------------------------------------
     /// @brief	Execute the JavaScript code contained in a file
@@ -71,10 +71,27 @@ public:
     /// @param	strFileName	Path of the script to execute
     /// @param	context	    Context in which to execute the script, empty to use the main
     ///                     one
-    /// @return				'true' if successful
+    /// @return				The return value of the script
     //------------------------------------------------------------------------------------
 	v8::Handle<v8::Value> executeFile(const std::string& strFileName,
-	                                  v8::Persistent<v8::Context> context = v8::Persistent<v8::Context>());
+	                                  v8::Handle<v8::Context> context = v8::Handle<v8::Context>());
+
+    //------------------------------------------------------------------------------------
+    /// @brief	Import an external module
+    ///
+    /// @param	strModuleName   Name of the module
+    /// @param	context	        Context in which to import the module, empty to use the
+    ///                         main one
+    /// @return				    'true' if successful
+    //------------------------------------------------------------------------------------
+    bool import(const std::string& strModuleName,
+                v8::Handle<v8::Context> context = v8::Handle<v8::Context>());
+
+    //------------------------------------------------------------------------------------
+    /// @brief	Create a new context, containing the minimal set of functions provided by
+    ///         Athena (print, import_module, load, ...)
+    //------------------------------------------------------------------------------------
+    static v8::Persistent<v8::Context> createContext();
 
     //------------------------------------------------------------------------------------
     /// @brief	Return the error message of the last error that occured
@@ -86,10 +103,13 @@ public:
 	
 
 	//_____ Attributes __________
-private:
+public:
     v8::Persistent<v8::Context> m_mainContext;
     std::string                 m_strLastError;
 };
+
+
+typedef bool tModuleInitialisationFunction(v8::Handle<v8::Object> parent);
 
 }
 }
