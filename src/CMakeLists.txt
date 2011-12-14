@@ -22,8 +22,16 @@ endif()
 
 xmake_project_link(ATHENA_SCRIPTING ATHENA_CORE V8)
 
-xmake_add_to_property(ATHENA_SCRIPTING COMPILE_DEFINITIONS "ATHENA_EXPORTS")
+xmake_add_to_list_property(ATHENA_SCRIPTING COMPILE_DEFINITIONS "ATHENA_EXPORTS")
+
+if (UNIX AND NOT ATHENA_SCRIPTING_STATIC)
+    xmake_add_to_property(ATHENA_SCRIPTING LINK_FLAGS "-ldl")
+endif()
 
 
 # Exportations
 xmake_export_include_paths(ATHENA_SCRIPTING ${INCLUDE_PATHS})
+
+if (UNIX)
+    xmake_export_link_flags(ATHENA_SCRIPTING "-ldl")
+endif()
