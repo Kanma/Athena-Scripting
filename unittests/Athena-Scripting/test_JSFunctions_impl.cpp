@@ -177,4 +177,27 @@ SUITE(JSFunctionsTests_UsingOwnContext)
         CHECK_EQUAL(15, result->ToInt32()->Value());
         CHECK(pScriptingManager->getLastError().empty());
 	}
+
+
+	TEST_FIXTURE(ScriptingTestEnvironment, Exceptions)
+	{
+        HandleScope handle_scope;
+
+#ifdef USE_MAIN_CONTEXT
+        context = ScriptingManager::createContext();
+#endif
+
+		Handle<Value> result = pScriptingManager->execute("import_module('module1');", context);
+
+        CHECK(!result.IsEmpty());
+        CHECK(result->IsBoolean());
+        CHECK(result->ToBoolean()->Value());
+        CHECK(pScriptingManager->getLastError().empty());
+
+		result = pScriptingManager->execute("module1.raiseException();", context);
+
+        CHECK(result.IsEmpty());
+        CHECK(!pScriptingManager->getLastError().empty());
+        CHECK_EQUAL("Something bad happened!", pScriptingManager->getLastError());
+	}
 }

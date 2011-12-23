@@ -1,6 +1,9 @@
 #include <v8.h>
+#include <Athena-Scripting/Utils.h>
+
 
 using namespace v8;
+using namespace Athena::Scripting;
 
 
 /************************************** CLASS Point *************************************/
@@ -19,6 +22,9 @@ public:
 
 /************************************ BINDING OF Point **********************************/
 
+#define CastJSPoint(HANDLE) CastJSObject<Point>(HANDLE, 1)
+
+
 Persistent<ObjectTemplate> point_template;
 
 
@@ -27,8 +33,7 @@ void PointWeakCallback(Persistent<Value> value, void* data)
 {
     if (value.IsNearDeath())
     {
-        Local<External> wrap = Local<External>::Cast(Persistent<Object>::Cast(value)->GetInternalField(0));
-        Point* p = static_cast<Point*>(wrap->Value());
+        Point* p = CastJSPoint(value);
         delete p;
     }
 }
@@ -37,49 +42,34 @@ void PointWeakCallback(Persistent<Value> value, void* data)
 // Constructor
 Handle<Value> NewPoint(const Arguments& args)
 {
-    Point* p = new Point(0, 0);
-    Persistent<Object> jsPoint = Persistent<Object>::New(point_template->NewInstance());
-    jsPoint->SetInternalField(0, External::New(p));
-    jsPoint.MakeWeak(0, PointWeakCallback);
-    
-    V8::AdjustAmountOfExternalAllocatedMemory(sizeof(Point));
-    
-    return jsPoint;
+    return createJSObject(point_template, PointWeakCallback, new Point(0, 0), sizeof(Point), 1);
 }
 
 
 Handle<Value> GetPointX(Local<String> property, const AccessorInfo &info)
 {
-    Local<Object> self = info.Holder();
-    Local<External> wrap = Local<External>::Cast(self->GetInternalField(0));
-    Point* p = static_cast<Point*>(wrap->Value());
+    Point* p = CastJSPoint(info.Holder());
     return Integer::New(p->x);
 }
 
 
 void SetPointX(Local<String> property, Local<Value> value, const AccessorInfo& info)
 {
-    Local<Object> self = info.Holder();
-    Local<External> wrap = Local<External>::Cast(self->GetInternalField(0));
-    Point* p = static_cast<Point*>(wrap->Value());
+    Point* p = CastJSPoint(info.Holder());
     p->x = value->Int32Value();
 }
 
 
 Handle<Value> GetPointY(Local<String> property, const AccessorInfo &info)
 {
-    Local<Object> self = info.Holder();
-    Local<External> wrap = Local<External>::Cast(self->GetInternalField(0));
-    Point* p = static_cast<Point*>(wrap->Value());
+    Point* p = CastJSPoint(info.Holder());
     return Integer::New(p->y);
 }
 
 
 void SetPointY(Local<String> property, Local<Value> value, const AccessorInfo& info)
 {
-    Local<Object> self = info.Holder();
-    Local<External> wrap = Local<External>::Cast(self->GetInternalField(0));
-    Point* p = static_cast<Point*>(wrap->Value());
+    Point* p = CastJSPoint(info.Holder());
     p->y = value->Int32Value();
 }
 
@@ -96,6 +86,12 @@ Handle<Value> sum(const Arguments& args)
 }
 
 
+Handle<Value> raiseException(const Arguments& args)
+{
+    return ThrowException(String::New("Something bad happened!"));
+}
+
+
 /****************************** INITIALISATION OF THE MODULE ****************************/
 
 extern "C" {
@@ -105,13 +101,14 @@ extern "C" {
         HandleScope handle_scope;
 
         // Bind the 'sum' function
-        if (!parent->Set(String::New("sum"), FunctionTemplate::New(sum)->GetFunction()))
+        if (!parent->Set(String::New("sum"), FunctionTemplate::New(sum)->GetFunction()) ||
+            !parent->Set(String::New("raiseException"), FunctionTemplate::New(raiseException)->GetFunction()))
             return false;
         
         // Bind the 'Point' class
         point_template = Persistent<ObjectTemplate>::New(ObjectTemplate::New());
         point_template->SetCallAsFunctionHandler(NewPoint);
-        point_template->SetInternalFieldCount(1);
+        point_template->SetInternalFieldCount(2);
 
         point_template->SetAccessor(String::New("x"), GetPointX, SetPointX);
         point_template->SetAccessor(String::New("y"), GetPointY, SetPointY);
