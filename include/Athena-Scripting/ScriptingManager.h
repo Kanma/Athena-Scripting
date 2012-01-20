@@ -57,12 +57,15 @@ public:
     //------------------------------------------------------------------------------------
     /// @brief	Execute the JavaScript code contained in a string
     ///
-    /// @param	strScript	The script to execute
-    /// @param	context	    Context in which to execute the script, empty to use the main
-    ///                     one
-    /// @return				The return value of the script
+    /// @param	strScript	    The script to execute
+    /// @param	strSourceName	Name of the source (filename or something related to the
+    ///                         application). Used to report errors.
+    /// @param	context	        Context in which to execute the script, empty to use the
+    ///                         main one
+    /// @return				    The return value of the script
     //------------------------------------------------------------------------------------
 	v8::Handle<v8::Value> execute(const std::string& strScript,
+	                              const std::string& strSourceName = "",
 	                              v8::Handle<v8::Context> context = v8::Handle<v8::Context>());
 
     //------------------------------------------------------------------------------------
@@ -100,16 +103,21 @@ public:
     {
         return m_strLastError;
     }
-	
+
 
 	//_____ Attributes __________
-public:
+private:
     v8::Persistent<v8::Context> m_mainContext;
     std::string                 m_strLastError;
 };
 
 
-typedef bool tModuleInitialisationFunction(v8::Handle<v8::Object> parent);
+//----------------------------------------------------------------------------------------
+/// @brief	Each module must implement a function matching this prototype called
+///         'init_module'
+//----------------------------------------------------------------------------------------
+typedef bool tModuleInitialisationFunction(v8::Handle<v8::Object> parent,
+                                           const std::string& modulePath);
 
 }
 }

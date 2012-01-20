@@ -21,10 +21,7 @@ bool runTest(const std::string& strFilePath)
 
 	result = manager.executeFile(strFilePath);
     if (result.IsEmpty())
-    {  
-        cout << strFilePath.c_str() << ": error: " << manager.getLastError().c_str() << endl;
         return false;
-    }
 
     return true;
 }

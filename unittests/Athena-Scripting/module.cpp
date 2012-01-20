@@ -1,6 +1,7 @@
 #include <v8.h>
 #include <Athena-Scripting/Utils.h>
-
+#include <Athena-Scripting/ScriptingManager.h>
+#include <string>
 
 using namespace v8;
 using namespace Athena::Scripting;
@@ -96,7 +97,7 @@ Handle<Value> raiseException(const Arguments& args)
 
 extern "C" {
 
-    bool init_module(Handle<Object> parent)
+    bool init_module(Handle<Object> parent, const std::string& modulePath)
     {
         HandleScope handle_scope;
 
@@ -116,6 +117,10 @@ extern "C" {
         if (!parent->Set(String::New("Point"), FunctionTemplate::New(NewPoint)->GetFunction()))
             return false;
         
+        Handle<Value> result = ScriptingManager::getSingletonPtr()->executeFile(modulePath + "js/Point3D.js", Context::GetCurrent());
+        if (result.IsEmpty())
+            return false;
+
         return true;
     }
 }
