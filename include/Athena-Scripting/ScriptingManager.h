@@ -97,6 +97,14 @@ public:
     static v8::Persistent<v8::Context> createContext();
 
     //------------------------------------------------------------------------------------
+    /// @brief	Return the main context
+    //------------------------------------------------------------------------------------
+    inline v8::Persistent<v8::Context> mainContext()
+    {
+        return m_mainContext;
+    }
+
+    //------------------------------------------------------------------------------------
     /// @brief	Return the error message of the last error that occured
     //------------------------------------------------------------------------------------
     inline std::string getLastError() const
