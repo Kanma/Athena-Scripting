@@ -2,7 +2,7 @@
 #include <Athena-Scripting/ScriptingManager.h>
 #include <Athena-Core/Log/LogManager.h>
 #include <Athena-Core/Log/XMLLogListener.h>
-#include "environments/ScriptingTestEnvironment.h"
+#include "../environments/ScriptingTestEnvironment.h"
 #include <iostream>
 
 
@@ -12,7 +12,7 @@ using namespace v8;
 
 
 #define USE_MAIN_CONTEXT
-#include "test_JSFunctions_impl.cpp"
+#include "JSFunctions_impl.cpp"
 
 #undef USE_MAIN_CONTEXT
-#include "test_JSFunctions_impl.cpp"
+#include "JSFunctions_impl.cpp"

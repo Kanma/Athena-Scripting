@@ -105,6 +105,23 @@ public:
     }
 
     //------------------------------------------------------------------------------------
+    /// @brief	Return the main context
+    //------------------------------------------------------------------------------------
+    inline void declareClassTemplate(const std::string& strName,
+                                     v8::Handle<v8::FunctionTemplate> function_template)
+    {
+        m_classes[strName] = v8::Persistent<v8::FunctionTemplate>::New(function_template);
+    }
+
+    //------------------------------------------------------------------------------------
+    /// @brief	Return the main context
+    //------------------------------------------------------------------------------------
+    inline v8::Handle<v8::FunctionTemplate> getClassTemplate(const std::string& strName)
+    {
+        return (m_classes.find(strName) != m_classes.end() ? m_classes[strName] : v8::Handle<v8::FunctionTemplate>());
+    }
+
+    //------------------------------------------------------------------------------------
     /// @brief	Return the error message of the last error that occured
     //------------------------------------------------------------------------------------
     inline std::string getLastError() const
@@ -115,8 +132,9 @@ public:
 
 	//_____ Attributes __________
 private:
-    v8::Persistent<v8::Context> m_mainContext;
-    std::string                 m_strLastError;
+    v8::Persistent<v8::Context>                                  m_mainContext;
+    std::map<std::string, v8::Persistent<v8::FunctionTemplate> > m_classes;
+    std::string                                                  m_strLastError;
 };
 
 

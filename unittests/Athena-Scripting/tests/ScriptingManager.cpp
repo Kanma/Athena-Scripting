@@ -2,7 +2,7 @@
 #include <Athena-Scripting/ScriptingManager.h>
 #include <Athena-Core/Log/LogManager.h>
 #include <Athena-Core/Log/XMLLogListener.h>
-#include "environments/ScriptingTestEnvironment.h"
+#include "../environments/ScriptingTestEnvironment.h"
 #include <iostream>
 
 
@@ -25,7 +25,7 @@ TEST(ScriptingManager_Singleton)
 
 
 #define USE_MAIN_CONTEXT
-#include "test_ScriptingManager_impl.cpp"
+#include "ScriptingManager_impl.cpp"
 
 #undef USE_MAIN_CONTEXT
-#include "test_ScriptingManager_impl.cpp"
+#include "ScriptingManager_impl.cpp"

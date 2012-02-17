@@ -259,7 +259,7 @@ SUITE(ScriptingManagerTests_UsingOwnContext)
 	}
 
 
-	TEST_FIXTURE(ScriptingTestEnvironment, ClassBinding)
+	TEST_FIXTURE(ScriptingTestEnvironment, BaseClass)
 	{
         HandleScope handle_scope;
 
@@ -272,7 +272,47 @@ SUITE(ScriptingManagerTests_UsingOwnContext)
         CHECK(!result.IsEmpty());
         CHECK(pScriptingManager->getLastError().empty());
 
-		result = pScriptingManager->executeFile(ATHENA_SCRIPTING_UNITTESTS_SCRIPTS_PATH "points.js", context);
+		result = pScriptingManager->executeFile(ATHENA_SCRIPTING_UNITTESTS_SCRIPTS_PATH "test_Base.js", context);
+
+        CHECK(!result.IsEmpty());
+        CHECK(pScriptingManager->getLastError().empty());
+	}
+
+
+	TEST_FIXTURE(ScriptingTestEnvironment, DerivedClass)
+	{
+        HandleScope handle_scope;
+
+#ifdef USE_MAIN_CONTEXT
+        context = ScriptingManager::createContext();
+#endif
+
+    	Handle<Value> result = pScriptingManager->executeFile(ATHENA_SCRIPTING_UNITTESTS_SCRIPTS_PATH "../js-test-runner/tests.js", context);
+
+        CHECK(!result.IsEmpty());
+        CHECK(pScriptingManager->getLastError().empty());
+
+		result = pScriptingManager->executeFile(ATHENA_SCRIPTING_UNITTESTS_SCRIPTS_PATH "test_Derived.js", context);
+
+        CHECK(!result.IsEmpty());
+        CHECK(pScriptingManager->getLastError().empty());
+	}
+
+
+	TEST_FIXTURE(ScriptingTestEnvironment, JavaScriptClass)
+	{
+        HandleScope handle_scope;
+
+#ifdef USE_MAIN_CONTEXT
+        context = ScriptingManager::createContext();
+#endif
+
+    	Handle<Value> result = pScriptingManager->executeFile(ATHENA_SCRIPTING_UNITTESTS_SCRIPTS_PATH "../js-test-runner/tests.js", context);
+
+        CHECK(!result.IsEmpty());
+        CHECK(pScriptingManager->getLastError().empty());
+
+		result = pScriptingManager->executeFile(ATHENA_SCRIPTING_UNITTESTS_SCRIPTS_PATH "test_Point3D.js", context);
 
         CHECK(!result.IsEmpty());
         CHECK(pScriptingManager->getLastError().empty());
