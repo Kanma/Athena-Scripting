@@ -36,6 +36,32 @@ namespace Scripting {
 
 
     //------------------------------------------------------------------------------------
+    /// @brief	Retrieve the C++ object associated with a JavaScript one
+    //------------------------------------------------------------------------------------
+    template<typename T>
+    void GetObjectPtr(v8::Handle<v8::Value> const &h, T** ptr)
+    {
+        // Ensure that the handle is an object
+        if (!h->IsObject())
+        {
+            *ptr = 0;
+            return;
+        }
+        
+        // Retrieve the object
+        v8::Local<v8::Object> obj = h->ToObject();
+        if (obj->InternalFieldCount() != 1)
+        {
+            *ptr = 0;
+            return;
+        }
+
+        // Retrieve the C++ object
+        *ptr = static_cast<T*>(obj->GetPointerFromInternalField(0));
+    }
+
+
+    //------------------------------------------------------------------------------------
     /// @brief	Default 'WeakReferenceCallback', that delete the C++ object associated
     ///         with a JavaScript one when the GC kicks in
     //------------------------------------------------------------------------------------
