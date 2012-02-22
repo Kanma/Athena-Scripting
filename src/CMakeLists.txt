@@ -1,5 +1,10 @@
+# File generation
+configure_file(${ATHENA_SCRIPTING_SOURCE_DIR}/src/module.cpp.in
+               ${XMAKE_BINARY_DIR}/generated/Athena-Scripting/module.cpp)
+
 # List the source files
-set(SRCS ScriptingManager.cpp
+set(SRCS ${XMAKE_BINARY_DIR}/generated/Athena-Scripting/module.cpp
+         ScriptingManager.cpp
          Functions.cpp
 )
 
@@ -15,7 +20,10 @@ xmake_import_search_paths(V8)
 
 # Declaration of the library
 if (NOT ATHENA_SCRIPTING_STATIC)
-    xmake_create_dynamic_library(ATHENA_SCRIPTING Athena-Scripting 1.0.0 1.0.0 ${SRCS})
+    xmake_create_dynamic_library(ATHENA_SCRIPTING Athena-Scripting
+                                 "${ATHENA_SCRIPTING_VERSION_MAJOR}.${ATHENA_SCRIPTING_VERSION_MINOR}.${ATHENA_SCRIPTING_VERSION_PATCH}"
+                                 "${ATHENA_SCRIPTING_VERSION_MAJOR}.${ATHENA_SCRIPTING_VERSION_MINOR}.${ATHENA_SCRIPTING_VERSION_PATCH}"
+                                 ${SRCS})
 else()
     xmake_create_static_library(ATHENA_SCRIPTING Athena-Scripting ${SRCS})
 endif()

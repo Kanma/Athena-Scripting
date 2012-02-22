@@ -230,7 +230,6 @@ bool ScriptingManager::import(const std::string& strModuleName, v8::Handle<v8::C
     {
         Handle<String> name = String::New(parts[i].c_str());
         
-        // Handle<Value> ns2 = ns->Get(name);
         Handle<Value> ns2;
         
         if (ns->Has(name))
@@ -323,6 +322,16 @@ Persistent<Context> ScriptingManager::createContext()
     global->Set(String::New("print"), FunctionTemplate::New(Print)->GetFunction());
     global->Set(String::New("import_module"), FunctionTemplate::New(Import)->GetFunction());
     global->Set(String::New("load"), FunctionTemplate::New(Load)->GetFunction());
+
+    // Create the 'Athena.Scripting' namespace
+    Handle<Object> ns1 = Object::New();
+    global->Set(String::New("Athena"), ns1);
+
+    Handle<Object> ns2 = Object::New();
+    ns1->Set(String::New("Scripting"), ns2);
+
+    // Bind the library version
+    ns2->Set(String::New("VERSION"), String::New(Athena::Scripting::VERSION));
 
     return context;
 }
