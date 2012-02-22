@@ -21,10 +21,7 @@ bool runTest(const std::string& strFilePath)
 
 	result = manager.executeFile(strFilePath);
     if (result.IsEmpty())
-    {  
-        cout << strFilePath.c_str() << ": error: " << manager.getLastError().c_str() << endl;
         return false;
-    }
 
     return true;
 }
@@ -32,7 +29,7 @@ bool runTest(const std::string& strFilePath)
 
 int main(int argc, char** argv)
 {
-    int nbTestsFailed = 0;
+    vector<string> failedTests;
     string strPath;
     int start = 2;
 
@@ -49,13 +46,20 @@ int main(int argc, char** argv)
     for (int i = start; i < argc; ++i)
     {
         if (!runTest(strPath + argv[i]))
-            ++nbTestsFailed;
+            failedTests.push_back(argv[i]);
     }
 
-    if (nbTestsFailed > 0)
-        cout << "FAILURE: " << nbTestsFailed << " out of " << (argc - start) << " tests failed" << endl;
+    if (!failedTests.empty())
+    {
+        cout << "FAILURE: " << failedTests.size() << " out of " << (argc - start) << " tests failed" << endl;
+    
+        for (unsigned int i = 0; i < failedTests.size(); ++i)
+            cout << "    - " << failedTests[i].c_str() << endl;
+    }
     else
+    {
         cout << "Success: " << (argc - start) << " tests passed" << endl;
-
-    return (nbTestsFailed > 0 ? 1 : 0);
+    }
+    
+    return (!failedTests.empty() > 0 ? 1 : 0);
 }

@@ -1,6 +1,7 @@
 ********************************************************************************
 *                                                                              *
-*                                Athena-Scripting                              *
+*                               Athena-Scripting                               *
+*                                Version 1.0.0                                 *
 *                     http://github.com/Kanma/Athena-Scripting                 *
 *                                                                              *
 ********************************************************************************
@@ -14,10 +15,51 @@ Athena-Scripting is one of the modules of the Athena Game Framework, in the form
 of a library written in C++.
 
 This module provides all the necessary tools to embed the V8 JavaScript Engine
-(http://code.google.com/p/v8/) in Athena.
+(http://code.google.com/p/v8/) in Athena, and execute JavaScript commands.
+
+This module can be used as a standalone library, or combined with the rest of
+the Athena Game Framework (http://github.com/Kanma/Athena-Framework).
 
 The use of this module is optional, you can choose to implement your own
-scripting solution instead.
+scripting solution instead, or to not use one at all.
+
+
+---------------------------------------
+- Dependencies
+---------------------------------------
+
+Athena-Scripting requires the following dependencies:
+
+   - XMake
+   - Athena-Math
+   - Athena-Core
+   - V8
+   - UnitTest++
+
+They are provided as GIT submodules of this repository and will be compiled
+automatically during the compilation of Athena-Scripting.
+
+To download them, do:
+
+    somewhere$ cd <path/to/the/source/of/Athena-Scripting>
+    Athena-Scripting$ git submodule init
+    Athena-Scripting$ git submodule update
+
+
+---------------------------------------
+- Compilation
+---------------------------------------
+
+(Note: you'll need to install CMake to compile Athena-Scripting)
+
+To compile Athena-Scripting (and all its dependencies), do:
+
+    somewhere$ mkdir build
+    somewhere$ cd build
+    build$ cmake <path/to/the/source/of/Athena-Scripting>
+    build$ make
+
+The library will be put in build/bin/
 
 
 ---------------------------------------
@@ -41,32 +83,3 @@ runtime application itself; any of those would satisfy the requirement.
 
 Even if the license doesn't require it, please consider to contribute your
 modifications back to the community.
-
-
----------------------------------------
-- Submodules
----------------------------------------
-
-This distribution use the following projects as GIT submodules:
-
-    - Athena-Core
-    - Athena-Math
-    - V8
-    - UnitTest++
-    - XMake
-
-To download them, do:
-
-	$ git submodule init
-	$ git submodule update
-
-
-Compilation
------------
-
-It is recommended to compile the project in a separate folder. Here's how I do it:
-
-	$ mkdir build
-	$ cd build
-	$ cmake ..
-	$ make

@@ -5,8 +5,8 @@ xmake_import_search_paths(UNITTEST_CPP)
 
 # List the source files
 set(SRCS main.cpp
-         test_ScriptingManager.cpp
-         test_JSFunctions.cpp
+         tests/ScriptingManager.cpp
+         tests/JSFunctions.cpp
 )
 
 
@@ -19,23 +19,8 @@ xmake_project_link(UNITTESTS_ATHENA_SCRIPTING ATHENA_SCRIPTING)
 xmake_add_to_list_property(UNITTESTS_ATHENA_SCRIPTING COMPILE_DEFINITIONS "ATHENA_SCRIPTING_UNITTESTS_SCRIPTS_PATH=\"${ATHENA_SCRIPTING_SOURCE_DIR}/unittests/scripts/\"")
 
 
-# Declaration of the test module 1
-xmake_create_dynamic_library(ATHENA_SCRIPTING_TEST_MODULE_1 Athena-Scripting-test-module1 1.0.0 1.0.0 "module.cpp")
-xmake_project_link(ATHENA_SCRIPTING_TEST_MODULE_1 V8)
-set_target_properties(Athena-Scripting-test-module1 PROPERTIES OUTPUT_NAME "module1"
-                                                               LIBRARY_OUTPUT_DIRECTORY "${XMAKE_BINARY_DIR}/bin/modules")
-
-# Declaration of the test module 2
-xmake_create_dynamic_library(ATHENA_SCRIPTING_TEST_MODULE_2 Athena-Scripting-test-module2 1.0.0 1.0.0 "module.cpp")
-xmake_project_link(ATHENA_SCRIPTING_TEST_MODULE_2 V8)
-set_target_properties(Athena-Scripting-test-module2 PROPERTIES OUTPUT_NAME "module2"
-                                                               LIBRARY_OUTPUT_DIRECTORY "${XMAKE_BINARY_DIR}/bin/modules/test")
-
-# Declaration of the test module 2
-xmake_create_dynamic_library(ATHENA_SCRIPTING_TEST_MODULE_3 Athena-Scripting-test-module3 1.0.0 1.0.0 "module.cpp")
-xmake_project_link(ATHENA_SCRIPTING_TEST_MODULE_3 V8)
-set_target_properties(Athena-Scripting-test-module3 PROPERTIES OUTPUT_NAME "module3"
-                                                               LIBRARY_OUTPUT_DIRECTORY "${XMAKE_BINARY_DIR}/bin/modules/test")
+# Process subdirectories
+add_subdirectory(module)
 
 
 # Run the unit tests

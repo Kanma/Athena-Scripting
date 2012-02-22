@@ -57,12 +57,15 @@ public:
     //------------------------------------------------------------------------------------
     /// @brief	Execute the JavaScript code contained in a string
     ///
-    /// @param	strScript	The script to execute
-    /// @param	context	    Context in which to execute the script, empty to use the main
-    ///                     one
-    /// @return				The return value of the script
+    /// @param	strScript	    The script to execute
+    /// @param	strSourceName	Name of the source (filename or something related to the
+    ///                         application). Used to report errors.
+    /// @param	context	        Context in which to execute the script, empty to use the
+    ///                         main one
+    /// @return				    The return value of the script
     //------------------------------------------------------------------------------------
 	v8::Handle<v8::Value> execute(const std::string& strScript,
+	                              const std::string& strSourceName = "",
 	                              v8::Handle<v8::Context> context = v8::Handle<v8::Context>());
 
     //------------------------------------------------------------------------------------
@@ -94,22 +97,53 @@ public:
     static v8::Persistent<v8::Context> createContext();
 
     //------------------------------------------------------------------------------------
+    /// @brief	Return the main context
+    //------------------------------------------------------------------------------------
+    inline v8::Persistent<v8::Context> mainContext()
+    {
+        return m_mainContext;
+    }
+
+    //------------------------------------------------------------------------------------
+    /// @brief	Return the main context
+    //------------------------------------------------------------------------------------
+    inline void declareClassTemplate(const std::string& strName,
+                                     v8::Handle<v8::FunctionTemplate> function_template)
+    {
+        m_classes[strName] = v8::Persistent<v8::FunctionTemplate>::New(function_template);
+    }
+
+    //------------------------------------------------------------------------------------
+    /// @brief	Return the main context
+    //------------------------------------------------------------------------------------
+    inline v8::Handle<v8::FunctionTemplate> getClassTemplate(const std::string& strName)
+    {
+        return (m_classes.find(strName) != m_classes.end() ? m_classes[strName] : v8::Handle<v8::FunctionTemplate>());
+    }
+
+    //------------------------------------------------------------------------------------
     /// @brief	Return the error message of the last error that occured
     //------------------------------------------------------------------------------------
     inline std::string getLastError() const
     {
         return m_strLastError;
     }
-	
+
 
 	//_____ Attributes __________
-public:
-    v8::Persistent<v8::Context> m_mainContext;
-    std::string                 m_strLastError;
+private:
+    v8::Persistent<v8::Context>                                  m_mainContext;
+    std::map<std::string, v8::Persistent<v8::FunctionTemplate> > m_classes;
+    std::string                                                  m_strLastError;
 };
 
 
-typedef bool tModuleInitialisationFunction(v8::Handle<v8::Object> parent);
+//----------------------------------------------------------------------------------------
+/// @brief	Each module must implement a function matching this prototype called
+///         'init_module'
+//----------------------------------------------------------------------------------------
+typedef bool tModuleInitialisationFunction(v8::Handle<v8::Object> parent,
+                                           const std::string& modulePath);
 
 }
 }

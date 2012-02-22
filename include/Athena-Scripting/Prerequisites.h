@@ -22,6 +22,8 @@ namespace Athena
     namespace Scripting
     {
         class ScriptingManager;
+
+        extern const char* VERSION;
     }
 }
 

@@ -8,6 +8,7 @@
 #include <Athena-Scripting/Functions.h>
 #include <Athena-Core/Log/LogManager.h>
 #include <Athena-Core/Utils/StringUtils.h>
+#include <Athena-Core/Utils/StringConverter.h>
 #include <iostream>
 #include <fstream>
 #include <sys/types.h> 
@@ -100,7 +101,9 @@ ScriptingManager* ScriptingManager::getSingletonPtr()
 
 /**************************************** METHODS ***************************************/
 
-Handle<Value> ScriptingManager::execute(const std::string& strScript, Handle<Context> context)
+Handle<Value> ScriptingManager::execute(const std::string& strScript,
+                                        const std::string& strSourceName,
+                                        Handle<Context> context)
 {
     // Assertions
     assert(!strScript.empty());
@@ -120,12 +123,20 @@ Handle<Value> ScriptingManager::execute(const std::string& strScript, Handle<Con
     Context::Scope context_scope(context);
 
     // Create a string containing the JavaScript source code
-    Handle<String> source = String::New(strScript.c_str(), strScript.size());
+    Handle<String> sourceCode = String::New(strScript.c_str(), strScript.size());
+
+    // Create a string containing the origin of the source code
+    Handle<String> origin;
+    
+    if (!strSourceName.empty())
+        origin = String::New(strSourceName.c_str(), strSourceName.size());
+    else
+        origin = String::New("<unknown>", 9);
 
     // Compile the source code
-    Handle<Script> script = Script::Compile(source);
+    Handle<Script> script = Script::Compile(sourceCode, origin);
     if (script.IsEmpty())
-    {  
+    {   
         Handle<Value> exception = trycatch.Exception();
         String::AsciiValue exception_str(exception);
         m_strLastError = *exception_str;
@@ -137,10 +148,15 @@ Handle<Value> ScriptingManager::execute(const std::string& strScript, Handle<Con
     Handle<Value> result = script->Run();
     if (result.IsEmpty())
     {  
-        Handle<Value> exception = trycatch.Exception();
-        String::AsciiValue exception_str(exception);
-        m_strLastError = *exception_str;
+        Handle<Message> message = trycatch.Message();
+        m_strLastError = *String::AsciiValue(message->GetScriptResourceName());
+        m_strLastError += ":";
+        m_strLastError += StringConverter::toString(message->GetLineNumber());
+        m_strLastError += ": ";
+        m_strLastError += *String::AsciiValue(message->Get());
+        
     	ATHENA_LOG_ERROR(m_strLastError);
+
         return Handle<Value>();
     }
 
@@ -161,7 +177,8 @@ Handle<Value> ScriptingManager::executeFile(const std::string& strFileName, Hand
     stream.open(strFileName.c_str(), ios_base::in);
     if (!stream.is_open())
     {
-        m_strLastError = "Can't file the file '" + strFileName + "'";
+        m_strLastError = "Can't find the file '" + strFileName + "'";
+    	ATHENA_LOG_ERROR(m_strLastError);
         return Handle<Value>();
     }
 
@@ -177,7 +194,7 @@ Handle<Value> ScriptingManager::executeFile(const std::string& strFileName, Hand
     stream.close();
 
     // Execute the script
-    Handle<Value> result = execute(pBuffer, context);
+    Handle<Value> result = execute(pBuffer, strFileName, context);
 
     delete[] pBuffer;
 
@@ -193,7 +210,8 @@ bool ScriptingManager::import(const std::string& strModuleName, v8::Handle<v8::C
     // Declarations
     DYNLIB_HANDLE                   handle;
     tModuleInitialisationFunction*  init_function;
-    string                          strLibrary = "modules/";
+    string                          strLibraryPath = "modules/";
+    string                          strLibraryName = "";
 
     // Initialisations
     m_strLastError = "";
@@ -212,7 +230,6 @@ bool ScriptingManager::import(const std::string& strModuleName, v8::Handle<v8::C
     {
         Handle<String> name = String::New(parts[i].c_str());
         
-        // Handle<Value> ns2 = ns->Get(name);
         Handle<Value> ns2;
         
         if (ns->Has(name))
@@ -233,33 +250,34 @@ bool ScriptingManager::import(const std::string& strModuleName, v8::Handle<v8::C
 
     // Retrieve the path to the dynamic library
 #if ATHENA_PLATFORM == ATHENA_PLATFORM_WIN32
-    if (!StringUtils::endsWith(strLibrary, "\\"))
-        strLibrary += "\\";
+    if (!StringUtils::endsWith(strLibraryPath, "\\"))
+        strLibraryPath += "\\";
 #else
-    if (!StringUtils::endsWith(strLibrary, "/"))
-        strLibrary += "/";
+    if (!StringUtils::endsWith(strLibraryPath, "/"))
+        strLibraryPath += "/";
 #endif
 
     for (int i = 0; i < parts.size() - 1; ++i)
-        strLibrary += parts[i] + "/";
+        strLibraryPath += parts[i] + "/";
     
 #if ATHENA_PLATFORM == ATHENA_PLATFORM_WIN32
-    strLibrary += parts[parts.size() - 1] + ".dll";
+    strLibraryName = strLibraryPath + parts[parts.size() - 1] + ".dll";
 #elif ATHENA_PLATFORM == ATHENA_PLATFORM_APPLE
-    strLibrary += "lib" + parts[parts.size() - 1] + ".dylib";
+    strLibraryName = strLibraryPath + "lib" + parts[parts.size() - 1] + ".dylib";
 #else
-    strLibrary += "lib" + parts[parts.size() - 1] + ".so";
+    strLibraryName = strLibraryPath + parts[parts.size() - 1] + ".so";
 #endif
 
     // Load the dynamic library
     struct stat fileInfo;
-    if (stat(strLibrary.c_str(), &fileInfo) != 0)
+    if (stat(strLibraryName.c_str(), &fileInfo) != 0)
     {
-        m_strLastError = "Failed to find the module '" + strLibrary + "')";
+        m_strLastError = "Failed to find the module '" + strLibraryName + "')";
+    	ATHENA_LOG_ERROR(m_strLastError);
         return false;
     }
 
-    handle = DYNLIB_LOAD(strLibrary.c_str());
+    handle = DYNLIB_LOAD(strLibraryName.c_str());
 
     if (!handle)
     {
@@ -269,7 +287,9 @@ bool ScriptingManager::import(const std::string& strModuleName, v8::Handle<v8::C
             m_strLastError = e;
         else
 #endif
-            m_strLastError = "Failed to load the module '" + strLibrary + "'";
+            m_strLastError = "Failed to load the module '" + strLibraryName + "'";
+
+    	ATHENA_LOG_ERROR(m_strLastError);
 
         return false;
     }
@@ -279,12 +299,13 @@ bool ScriptingManager::import(const std::string& strModuleName, v8::Handle<v8::C
     if (!init_function)
     {
         int ret = DYNLIB_UNLOAD(handle);
-        m_strLastError = "No initialisation function found in the module '" + strLibrary + "'";
+        m_strLastError = "No initialisation function found in the module '" + strLibraryName + "'";
+    	ATHENA_LOG_ERROR(m_strLastError);
         return false;
     }
 
     // Initialise the module
-    return init_function(ns);
+    return init_function(ns, strLibraryPath);
 }
 
 
@@ -301,6 +322,16 @@ Persistent<Context> ScriptingManager::createContext()
     global->Set(String::New("print"), FunctionTemplate::New(Print)->GetFunction());
     global->Set(String::New("import_module"), FunctionTemplate::New(Import)->GetFunction());
     global->Set(String::New("load"), FunctionTemplate::New(Load)->GetFunction());
+
+    // Create the 'Athena.Scripting' namespace
+    Handle<Object> ns1 = Object::New();
+    global->Set(String::New("Athena"), ns1);
+
+    Handle<Object> ns2 = Object::New();
+    ns1->Set(String::New("Scripting"), ns2);
+
+    // Bind the library version
+    ns2->Set(String::New("VERSION"), String::New(Athena::Scripting::VERSION));
 
     return context;
 }
