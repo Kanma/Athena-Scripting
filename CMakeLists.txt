@@ -29,7 +29,7 @@ endif()
 set(ATHENA_SCRIPTING_VERSION_MAJOR 1)
 set(ATHENA_SCRIPTING_VERSION_MINOR 0)
 set(ATHENA_SCRIPTING_VERSION_PATCH 0)
-set(ATHENA_SCRIPTING_VERSION_SUFFIX " (Dev)")
+set(ATHENA_SCRIPTING_VERSION_SUFFIX "")
 
 
 ##########################################################################################
