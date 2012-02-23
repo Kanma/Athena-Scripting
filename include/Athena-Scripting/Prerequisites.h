@@ -1,6 +1,6 @@
 /** @file   Prerequisites.h
     @author Philip Abbet
-    
+
     Declaration of the types of the Athena-Scripting module
 */
 
@@ -11,14 +11,14 @@
 
 
 //----------------------------------------------------------------------------------------
-/// @brief	Main namespace. All the components of the Athena engine belongs to this
-///			namespace
+/// @brief  Main namespace. All the components of the Athena engine belongs to this
+///         namespace
 //----------------------------------------------------------------------------------------
 namespace Athena
 {
-	//------------------------------------------------------------------------------------
-	/// @brief	Contains all the scripting-related classes
-	//------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------
+    /// @brief  Contains all the scripting-related classes
+    //------------------------------------------------------------------------------------
     namespace Scripting
     {
         class ScriptingManager;

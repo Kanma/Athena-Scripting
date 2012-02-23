@@ -20,7 +20,7 @@ Handle<Value> sum(const Arguments& args)
     HandleScope handle_scope;
 
     int result = args[0]->ToInt32()->Value() + args[1]->ToInt32()->Value();
-    
+
     return handle_scope.Close(Int32::New(result));
 }
 

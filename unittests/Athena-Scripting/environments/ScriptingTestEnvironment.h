@@ -9,19 +9,19 @@ struct ScriptingTestEnvironment
     Athena::Scripting::ScriptingManager* pScriptingManager;
     v8::Persistent<v8::Context>          context;
 
-	ScriptingTestEnvironment()
-	: pScriptingManager(0)
-	{
+    ScriptingTestEnvironment()
+    : pScriptingManager(0)
+    {
         pScriptingManager = new Athena::Scripting::ScriptingManager();
-	}
+    }
 
-	~ScriptingTestEnvironment()
-	{
-	    if (!context.IsEmpty())
+    ~ScriptingTestEnvironment()
+    {
+        if (!context.IsEmpty())
             context.Dispose();
-	    
+
         delete pScriptingManager;
-	}
+    }
 };
 
 

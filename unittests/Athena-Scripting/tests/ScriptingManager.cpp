@@ -13,14 +13,14 @@ using namespace v8;
 
 TEST(ScriptingManager_Singleton)
 {
-	CHECK(!ScriptingManager::getSingletonPtr());
-	
-	ScriptingManager* pScriptingManager = new ScriptingManager();
-	CHECK(pScriptingManager);
-	CHECK(pScriptingManager == ScriptingManager::getSingletonPtr());
+    CHECK(!ScriptingManager::getSingletonPtr());
 
-	delete pScriptingManager;
-	CHECK(!ScriptingManager::getSingletonPtr());
+    ScriptingManager* pScriptingManager = new ScriptingManager();
+    CHECK(pScriptingManager);
+    CHECK(pScriptingManager == ScriptingManager::getSingletonPtr());
+
+    delete pScriptingManager;
+    CHECK(!ScriptingManager::getSingletonPtr());
 }
 
 
