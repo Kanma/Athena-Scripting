@@ -77,15 +77,15 @@ Handle<Value> Base_G(const Arguments& args)
 bool bind_Base(Handle<Object> parent)
 {
     ScriptingManager* pManager = ScriptingManager::getSingletonPtr();
-    
+
     Handle<FunctionTemplate> base = pManager->getClassTemplate("Tests.Base");
-    
+
     if (base.IsEmpty())
     {
         // Declaration of the class
         base = FunctionTemplate::New(Base_New);
         base->InstanceTemplate()->SetInternalFieldCount(1);
-        
+
         // Attributes
         AddAttribute(base, "a", Base_GetA, Base_SetA);
 

@@ -1,7 +1,7 @@
-/**	@file	ScriptingManager.h
-	@author	Philip Abbet
+/** @file   ScriptingManager.h
+    @author Philip Abbet
 
-	Declaration of the class 'Athena::Scripting::ScriptingManager'
+    Declaration of the class 'Athena::Scripting::ScriptingManager'
 */
 
 #ifndef _ATHENA_SCRIPTING_SCRIPTINGMANAGER_H_
@@ -16,88 +16,88 @@ namespace Scripting {
 
 
 //----------------------------------------------------------------------------------------
-/// @brief	Represents the Scripting Manager
+/// @brief  Represents the Scripting Manager
 ///
 /// This manager is the entry point for all the scripting-related features.
 ///
 /// It maintains a 'main context', and allows the execution of scripts in their own
 /// separate contexts.
-/// 
+///
 /// @remark This class is a singleton
 //----------------------------------------------------------------------------------------
-class ATHENA_SYMBOL ScriptingManager: public Utils::Singleton<ScriptingManager>
+class ATHENA_SCRIPTING_SYMBOL ScriptingManager: public Utils::Singleton<ScriptingManager>
 {
-	//_____ Construction / Destruction __________
+    //_____ Construction / Destruction __________
 public:
     //------------------------------------------------------------------------------------
-    /// @brief	Constructor
+    /// @brief  Constructor
     //------------------------------------------------------------------------------------
-	ScriptingManager();
+    ScriptingManager();
 
     //------------------------------------------------------------------------------------
-    /// @brief	Destructor
+    /// @brief  Destructor
     //------------------------------------------------------------------------------------
-	~ScriptingManager();
+    ~ScriptingManager();
 
     //------------------------------------------------------------------------------------
-    /// @brief	Returns a reference to the instance of the Scripting Manager
-    /// @return	A reference to the manager
+    /// @brief  Returns a reference to the instance of the Scripting Manager
+    /// @return A reference to the manager
     //------------------------------------------------------------------------------------
-	static ScriptingManager& getSingleton();
+    static ScriptingManager& getSingleton();
 
     //------------------------------------------------------------------------------------
-    /// @brief	Returns a pointer to the instance of the Scripting Manager
-    /// @return	A pointer to the manager
+    /// @brief  Returns a pointer to the instance of the Scripting Manager
+    /// @return A pointer to the manager
     //------------------------------------------------------------------------------------
-	static ScriptingManager* getSingletonPtr();
+    static ScriptingManager* getSingletonPtr();
 
 
-	//_____ Methods __________
+    //_____ Methods __________
 public:
     //------------------------------------------------------------------------------------
-    /// @brief	Execute the JavaScript code contained in a string
+    /// @brief  Execute the JavaScript code contained in a string
     ///
-    /// @param	strScript	    The script to execute
-    /// @param	strSourceName	Name of the source (filename or something related to the
+    /// @param  strScript       The script to execute
+    /// @param  strSourceName   Name of the source (filename or something related to the
     ///                         application). Used to report errors.
-    /// @param	context	        Context in which to execute the script, empty to use the
+    /// @param  context         Context in which to execute the script, empty to use the
     ///                         main one
-    /// @return				    The return value of the script
+    /// @return                 The return value of the script
     //------------------------------------------------------------------------------------
-	v8::Handle<v8::Value> execute(const std::string& strScript,
-	                              const std::string& strSourceName = "",
-	                              v8::Handle<v8::Context> context = v8::Handle<v8::Context>());
+    v8::Handle<v8::Value> execute(const std::string& strScript,
+                                  const std::string& strSourceName = "",
+                                  v8::Handle<v8::Context> context = v8::Handle<v8::Context>());
 
     //------------------------------------------------------------------------------------
-    /// @brief	Execute the JavaScript code contained in a file
+    /// @brief  Execute the JavaScript code contained in a file
     ///
-    /// @param	strFileName	Path of the script to execute
-    /// @param	context	    Context in which to execute the script, empty to use the main
+    /// @param  strFileName Path of the script to execute
+    /// @param  context     Context in which to execute the script, empty to use the main
     ///                     one
-    /// @return				The return value of the script
+    /// @return             The return value of the script
     //------------------------------------------------------------------------------------
-	v8::Handle<v8::Value> executeFile(const std::string& strFileName,
-	                                  v8::Handle<v8::Context> context = v8::Handle<v8::Context>());
+    v8::Handle<v8::Value> executeFile(const std::string& strFileName,
+                                      v8::Handle<v8::Context> context = v8::Handle<v8::Context>());
 
     //------------------------------------------------------------------------------------
-    /// @brief	Import an external module
+    /// @brief  Import an external module
     ///
-    /// @param	strModuleName   Name of the module
-    /// @param	context	        Context in which to import the module, empty to use the
+    /// @param  strModuleName   Name of the module
+    /// @param  context         Context in which to import the module, empty to use the
     ///                         main one
-    /// @return				    'true' if successful
+    /// @return                 'true' if successful
     //------------------------------------------------------------------------------------
     bool import(const std::string& strModuleName,
                 v8::Handle<v8::Context> context = v8::Handle<v8::Context>());
 
     //------------------------------------------------------------------------------------
-    /// @brief	Create a new context, containing the minimal set of functions provided by
+    /// @brief  Create a new context, containing the minimal set of functions provided by
     ///         Athena (print, import_module, load, ...)
     //------------------------------------------------------------------------------------
     static v8::Persistent<v8::Context> createContext();
 
     //------------------------------------------------------------------------------------
-    /// @brief	Return the main context
+    /// @brief  Return the main context
     //------------------------------------------------------------------------------------
     inline v8::Persistent<v8::Context> mainContext()
     {
@@ -105,7 +105,7 @@ public:
     }
 
     //------------------------------------------------------------------------------------
-    /// @brief	Return the main context
+    /// @brief  Return the main context
     //------------------------------------------------------------------------------------
     inline void declareClassTemplate(const std::string& strName,
                                      v8::Handle<v8::FunctionTemplate> function_template)
@@ -114,7 +114,7 @@ public:
     }
 
     //------------------------------------------------------------------------------------
-    /// @brief	Return the main context
+    /// @brief  Return the main context
     //------------------------------------------------------------------------------------
     inline v8::Handle<v8::FunctionTemplate> getClassTemplate(const std::string& strName)
     {
@@ -122,7 +122,7 @@ public:
     }
 
     //------------------------------------------------------------------------------------
-    /// @brief	Return the error message of the last error that occured
+    /// @brief  Return the error message of the last error that occured
     //------------------------------------------------------------------------------------
     inline std::string getLastError() const
     {
@@ -130,7 +130,7 @@ public:
     }
 
 
-	//_____ Attributes __________
+    //_____ Attributes __________
 private:
     v8::Persistent<v8::Context>                                  m_mainContext;
     std::map<std::string, v8::Persistent<v8::FunctionTemplate> > m_classes;
@@ -139,7 +139,7 @@ private:
 
 
 //----------------------------------------------------------------------------------------
-/// @brief	Each module must implement a function matching this prototype called
+/// @brief  Each module must implement a function matching this prototype called
 ///         'init_module'
 //----------------------------------------------------------------------------------------
 typedef bool tModuleInitialisationFunction(v8::Handle<v8::Object> parent,

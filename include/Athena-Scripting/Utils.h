@@ -1,7 +1,7 @@
-/**	@file	Utils.h
-	@author	Philip Abbet
+/** @file   Utils.h
+    @author Philip Abbet
 
-	Declaration of some utilities related to scripting
+    Declaration of some utilities related to scripting
 */
 
 #ifndef _ATHENA_SCRIPTING_UTILS_H_
@@ -16,7 +16,7 @@ namespace Scripting {
 
 
     //------------------------------------------------------------------------------------
-    /// @brief	Retrieve the C++ object associated with a JavaScript one
+    /// @brief  Retrieve the C++ object associated with a JavaScript one
     //------------------------------------------------------------------------------------
     template<typename T>
     T* GetObjectPtr(v8::Handle<v8::Value> const &h)
@@ -24,7 +24,7 @@ namespace Scripting {
         // Ensure that the handle is an object
         if (!h->IsObject())
             return 0;
-        
+
         // Retrieve the object
         v8::Local<v8::Object> obj = h->ToObject();
         if (obj->InternalFieldCount() != 1)
@@ -36,7 +36,7 @@ namespace Scripting {
 
 
     //------------------------------------------------------------------------------------
-    /// @brief	Retrieve the C++ object associated with a JavaScript one
+    /// @brief  Retrieve the C++ object associated with a JavaScript one
     //------------------------------------------------------------------------------------
     template<typename T>
     void GetObjectPtr(v8::Handle<v8::Value> const &h, T** ptr)
@@ -47,7 +47,7 @@ namespace Scripting {
             *ptr = 0;
             return;
         }
-        
+
         // Retrieve the object
         v8::Local<v8::Object> obj = h->ToObject();
         if (obj->InternalFieldCount() != 1)
@@ -62,7 +62,7 @@ namespace Scripting {
 
 
     //------------------------------------------------------------------------------------
-    /// @brief	Default 'WeakReferenceCallback', that delete the C++ object associated
+    /// @brief  Default 'WeakReferenceCallback', that delete the C++ object associated
     ///         with a JavaScript one when the GC kicks in
     //------------------------------------------------------------------------------------
     template<typename T>
@@ -77,7 +77,7 @@ namespace Scripting {
 
 
     //------------------------------------------------------------------------------------
-    /// @brief	Associate a C++ object to a JavaScript one
+    /// @brief  Associate a C++ object to a JavaScript one
     //------------------------------------------------------------------------------------
     template<typename T>
     v8::Persistent<v8::Object> SetObjectPtr(v8::Handle<v8::Object> object, T* ptr)
@@ -94,7 +94,7 @@ namespace Scripting {
 
 
     //------------------------------------------------------------------------------------
-    /// @brief	Associate a C++ object to a JavaScript one
+    /// @brief  Associate a C++ object to a JavaScript one
     ///
     /// This function let you specify a custom 'WeakReferenceCallback' function, called to
     /// delete the C++ object associated with a JavaScript one when the GC kicks in
@@ -115,7 +115,7 @@ namespace Scripting {
 
 
     //------------------------------------------------------------------------------------
-    /// @brief	Associate a C++ object to a JavaScript one
+    /// @brief  Associate a C++ object to a JavaScript one
     ///
     /// This function let you specify the size of the object in memory (use it when
     /// 'sizeof()' can't determine it)
@@ -136,7 +136,7 @@ namespace Scripting {
 
 
     //------------------------------------------------------------------------------------
-    /// @brief	Associate a C++ object to a JavaScript one
+    /// @brief  Associate a C++ object to a JavaScript one
     ///
     /// This function let you specify a custom 'WeakReferenceCallback' function, called to
     /// delete the C++ object associated with a JavaScript one when the GC kicks in.
@@ -160,7 +160,7 @@ namespace Scripting {
 
 
     //------------------------------------------------------------------------------------
-    /// @brief	Add a method to the JavaScript template of a C++ class
+    /// @brief  Add a method to the JavaScript template of a C++ class
     //------------------------------------------------------------------------------------
     inline void AddMethod(v8::Handle<v8::FunctionTemplate> function_template,
                           const std::string& name, v8::InvocationCallback callback)
@@ -172,7 +172,7 @@ namespace Scripting {
 
 
     //------------------------------------------------------------------------------------
-    /// @brief	Add an attribute to the JavaScript template of a C++ class
+    /// @brief  Add an attribute to the JavaScript template of a C++ class
     //------------------------------------------------------------------------------------
     inline void AddAttribute(v8::Handle<v8::FunctionTemplate> function_template,
                              const std::string& name,

@@ -65,18 +65,18 @@ Handle<Value> Derived_H(const Arguments& args)
 bool bind_Derived(Handle<Object> parent)
 {
     ScriptingManager* pManager = ScriptingManager::getSingletonPtr();
-    
+
     Handle<FunctionTemplate> derived = pManager->getClassTemplate("Tests.Derived");
-    
+
     if (derived.IsEmpty())
     {
         assert(!pManager->getClassTemplate("Tests.Base").IsEmpty());
-        
+
         // Declaration of the class
         derived = FunctionTemplate::New(Derived_New);
         derived->InstanceTemplate()->SetInternalFieldCount(1);
         derived->Inherit(pManager->getClassTemplate("Tests.Base"));
-        
+
         // Attributes
         AddAttribute(derived, "b", Derived_GetB, Derived_SetB);
 

@@ -1,7 +1,7 @@
-/**	@file	ScriptingManager.cpp
-	@author	Philip Abbet
+/** @file   ScriptingManager.cpp
+    @author Philip Abbet
 
-	Implementation of the class 'Athena::Scripting::ScriptingManager'
+    Implementation of the class 'Athena::Scripting::ScriptingManager'
 */
 
 #include <Athena-Scripting/ScriptingManager.h>
@@ -11,8 +11,8 @@
 #include <Athena-Core/Utils/StringConverter.h>
 #include <iostream>
 #include <fstream>
-#include <sys/types.h> 
-#include <sys/stat.h> 
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #if ATHENA_PLATFORM == ATHENA_PLATFORM_WIN32
 #   define WIN32_LEAN_AND_MEAN
@@ -64,12 +64,12 @@ template<> ScriptingManager* Singleton<ScriptingManager>::ms_Singleton = 0;
 
 ScriptingManager::ScriptingManager()
 {
-	ATHENA_LOG_EVENT("Creation");
+    ATHENA_LOG_EVENT("Creation");
 
     // Create the global template
     HandleScope handle_scope;
-	
-	// Create the main context
+
+    // Create the main context
     m_mainContext = createContext();
 }
 
@@ -77,7 +77,7 @@ ScriptingManager::ScriptingManager()
 
 ScriptingManager::~ScriptingManager()
 {
-	ATHENA_LOG_EVENT("Destruction");
+    ATHENA_LOG_EVENT("Destruction");
 
     // Dispose the main context
     m_mainContext.Dispose();
@@ -87,15 +87,15 @@ ScriptingManager::~ScriptingManager()
 
 ScriptingManager& ScriptingManager::getSingleton()
 {
-	assert(ms_Singleton);
-	return *ms_Singleton;
+    assert(ms_Singleton);
+    return *ms_Singleton;
 }
 
 //-----------------------------------------------------------------------
 
 ScriptingManager* ScriptingManager::getSingletonPtr()
 {
-	return ms_Singleton;
+    return ms_Singleton;
 }
 
 
@@ -118,8 +118,8 @@ Handle<Value> ScriptingManager::execute(const std::string& strScript,
     // Retrieve the context to use
     if (context.IsEmpty())
         context = m_mainContext;
-  
-    // Enter the context for compiling and running the script 
+
+    // Enter the context for compiling and running the script
     Context::Scope context_scope(context);
 
     // Create a string containing the JavaScript source code
@@ -127,7 +127,7 @@ Handle<Value> ScriptingManager::execute(const std::string& strScript,
 
     // Create a string containing the origin of the source code
     Handle<String> origin;
-    
+
     if (!strSourceName.empty())
         origin = String::New(strSourceName.c_str(), strSourceName.size());
     else
@@ -136,26 +136,26 @@ Handle<Value> ScriptingManager::execute(const std::string& strScript,
     // Compile the source code
     Handle<Script> script = Script::Compile(sourceCode, origin);
     if (script.IsEmpty())
-    {   
+    {
         Handle<Value> exception = trycatch.Exception();
         String::AsciiValue exception_str(exception);
         m_strLastError = *exception_str;
-    	ATHENA_LOG_ERROR(m_strLastError);
+        ATHENA_LOG_ERROR(m_strLastError);
         return Handle<Value>();
     }
-  
+
     // Run the script to get the result
     Handle<Value> result = script->Run();
     if (result.IsEmpty())
-    {  
+    {
         Handle<Message> message = trycatch.Message();
         m_strLastError = *String::AsciiValue(message->GetScriptResourceName());
         m_strLastError += ":";
         m_strLastError += StringConverter::toString(message->GetLineNumber());
         m_strLastError += ": ";
         m_strLastError += *String::AsciiValue(message->Get());
-        
-    	ATHENA_LOG_ERROR(m_strLastError);
+
+        ATHENA_LOG_ERROR(m_strLastError);
 
         return Handle<Value>();
     }
@@ -172,13 +172,19 @@ Handle<Value> ScriptingManager::executeFile(const std::string& strFileName, Hand
 
     // Declarations
     std::ifstream stream;
-    
+
     // Open the file
+#if ATHENA_PLATFORM == ATHENA_PLATFORM_WIN32
+    string strConvertedFileName = strFileName;
+    StringUtils::replaceAll(strConvertedFileName, "/", "\\");
+    stream.open(strConvertedFileName.c_str(), ios_base::in);
+#else
     stream.open(strFileName.c_str(), ios_base::in);
+#endif
     if (!stream.is_open())
     {
         m_strLastError = "Can't find the file '" + strFileName + "'";
-    	ATHENA_LOG_ERROR(m_strLastError);
+        ATHENA_LOG_ERROR(m_strLastError);
         return Handle<Value>();
     }
 
@@ -190,7 +196,7 @@ Handle<Value> ScriptingManager::executeFile(const std::string& strFileName, Hand
     char* pBuffer = new char[size + 1];
     pBuffer[size] = 0;
     stream.read(pBuffer, size);
-	
+
     stream.close();
 
     // Execute the script
@@ -210,7 +216,7 @@ bool ScriptingManager::import(const std::string& strModuleName, v8::Handle<v8::C
     // Declarations
     DYNLIB_HANDLE                   handle;
     tModuleInitialisationFunction*  init_function;
-    string                          strLibraryPath = "modules/";
+    string                          strLibraryPath = "modules";
     string                          strLibraryName = "";
 
     // Initialisations
@@ -229,14 +235,14 @@ bool ScriptingManager::import(const std::string& strModuleName, v8::Handle<v8::C
     for (unsigned int i = 0; i < parts.size(); ++i)
     {
         Handle<String> name = String::New(parts[i].c_str());
-        
+
         Handle<Value> ns2;
-        
+
         if (ns->Has(name))
         {
             if (i == parts.size() - 1)
                 return true;
-            
+
             ns2 = ns->Get(name);
         }
         else
@@ -244,7 +250,7 @@ bool ScriptingManager::import(const std::string& strModuleName, v8::Handle<v8::C
             ns2 = Object::New();
             ns->Set(name, ns2);
         }
-        
+
         ns = ns2->ToObject();
     }
 
@@ -252,20 +258,23 @@ bool ScriptingManager::import(const std::string& strModuleName, v8::Handle<v8::C
 #if ATHENA_PLATFORM == ATHENA_PLATFORM_WIN32
     if (!StringUtils::endsWith(strLibraryPath, "\\"))
         strLibraryPath += "\\";
+
+    for (unsigned int i = 0; i < parts.size() - 1; ++i)
+        strLibraryPath += parts[i] + "\\";
+
+    strLibraryName = strLibraryPath + parts[parts.size() - 1] + ".dll";
 #else
     if (!StringUtils::endsWith(strLibraryPath, "/"))
         strLibraryPath += "/";
-#endif
 
-    for (int i = 0; i < parts.size() - 1; ++i)
+    for (unsigned int i = 0; i < parts.size() - 1; ++i)
         strLibraryPath += parts[i] + "/";
-    
-#if ATHENA_PLATFORM == ATHENA_PLATFORM_WIN32
-    strLibraryName = strLibraryPath + parts[parts.size() - 1] + ".dll";
-#elif ATHENA_PLATFORM == ATHENA_PLATFORM_APPLE
-    strLibraryName = strLibraryPath + "lib" + parts[parts.size() - 1] + ".dylib";
-#else
-    strLibraryName = strLibraryPath + parts[parts.size() - 1] + ".so";
+
+    #if ATHENA_PLATFORM == ATHENA_PLATFORM_APPLE
+        strLibraryName = strLibraryPath + parts[parts.size() - 1] + ".dylib";
+    #else
+        strLibraryName = strLibraryPath + parts[parts.size() - 1] + ".so";
+    #endif
 #endif
 
     // Load the dynamic library
@@ -273,7 +282,7 @@ bool ScriptingManager::import(const std::string& strModuleName, v8::Handle<v8::C
     if (stat(strLibraryName.c_str(), &fileInfo) != 0)
     {
         m_strLastError = "Failed to find the module '" + strLibraryName + "')";
-    	ATHENA_LOG_ERROR(m_strLastError);
+        ATHENA_LOG_ERROR(m_strLastError);
         return false;
     }
 
@@ -289,7 +298,7 @@ bool ScriptingManager::import(const std::string& strModuleName, v8::Handle<v8::C
 #endif
             m_strLastError = "Failed to load the module '" + strLibraryName + "'";
 
-    	ATHENA_LOG_ERROR(m_strLastError);
+        ATHENA_LOG_ERROR(m_strLastError);
 
         return false;
     }
@@ -300,7 +309,7 @@ bool ScriptingManager::import(const std::string& strModuleName, v8::Handle<v8::C
     {
         int ret = DYNLIB_UNLOAD(handle);
         m_strLastError = "No initialisation function found in the module '" + strLibraryName + "'";
-    	ATHENA_LOG_ERROR(m_strLastError);
+        ATHENA_LOG_ERROR(m_strLastError);
         return false;
     }
 
@@ -311,7 +320,7 @@ bool ScriptingManager::import(const std::string& strModuleName, v8::Handle<v8::C
 
 Persistent<Context> ScriptingManager::createContext()
 {
-	// Create the context and enter it
+    // Create the context and enter it
     Persistent<Context> context = Context::New();
     Context::Scope context_scope(context);
 

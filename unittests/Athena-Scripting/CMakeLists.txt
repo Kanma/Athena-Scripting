@@ -24,8 +24,12 @@ add_subdirectory(module)
 
 
 # Run the unit tests
-get_property(PATH TARGET UnitTests-Athena-Scripting PROPERTY RUNTIME_OUTPUT_DIRECTORY)
+set(WORKING_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
+if (WIN32)
+    set(WORKING_DIRECTORY "${WORKING_DIRECTORY}/$(OutDir)")
+endif()
+
 add_custom_target(Run-UnitTests-Athena-Scripting ALL UnitTests-Athena-Scripting
                   DEPENDS UnitTests-Athena-Scripting Athena-Scripting-test-module1 Athena-Scripting-test-module2 Athena-Scripting-test-module3
-                  WORKING_DIRECTORY ${PATH}
+                  WORKING_DIRECTORY ${WORKING_DIRECTORY}
                   COMMENT "Unit testing: Athena-Scripting..." VERBATIM)
