@@ -61,5 +61,5 @@ int main(int argc, char** argv)
         cout << "Success: " << (argc - start) << " tests passed" << endl;
     }
 
-    return (!failedTests.empty() > 0 ? 1 : 0);
+    return (!failedTests.empty() ? 1 : 0);
 }

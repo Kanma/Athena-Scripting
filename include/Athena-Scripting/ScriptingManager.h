@@ -25,7 +25,7 @@ namespace Scripting {
 ///
 /// @remark This class is a singleton
 //----------------------------------------------------------------------------------------
-class ATHENA_SYMBOL ScriptingManager: public Utils::Singleton<ScriptingManager>
+class ATHENA_SCRIPTING_SYMBOL ScriptingManager: public Utils::Singleton<ScriptingManager>
 {
     //_____ Construction / Destruction __________
 public:

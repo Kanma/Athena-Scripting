@@ -174,7 +174,13 @@ Handle<Value> ScriptingManager::executeFile(const std::string& strFileName, Hand
     std::ifstream stream;
 
     // Open the file
+#if ATHENA_PLATFORM == ATHENA_PLATFORM_WIN32
+    string strConvertedFileName = strFileName;
+    StringUtils::replaceAll(strConvertedFileName, "/", "\\");
+    stream.open(strConvertedFileName.c_str(), ios_base::in);
+#else
     stream.open(strFileName.c_str(), ios_base::in);
+#endif
     if (!stream.is_open())
     {
         m_strLastError = "Can't find the file '" + strFileName + "'";
@@ -210,7 +216,7 @@ bool ScriptingManager::import(const std::string& strModuleName, v8::Handle<v8::C
     // Declarations
     DYNLIB_HANDLE                   handle;
     tModuleInitialisationFunction*  init_function;
-    string                          strLibraryPath = "modules/";
+    string                          strLibraryPath = "modules";
     string                          strLibraryName = "";
 
     // Initialisations
@@ -252,20 +258,23 @@ bool ScriptingManager::import(const std::string& strModuleName, v8::Handle<v8::C
 #if ATHENA_PLATFORM == ATHENA_PLATFORM_WIN32
     if (!StringUtils::endsWith(strLibraryPath, "\\"))
         strLibraryPath += "\\";
+
+    for (unsigned int i = 0; i < parts.size() - 1; ++i)
+        strLibraryPath += parts[i] + "\\";
+
+    strLibraryName = strLibraryPath + parts[parts.size() - 1] + ".dll";
 #else
     if (!StringUtils::endsWith(strLibraryPath, "/"))
         strLibraryPath += "/";
-#endif
 
-    for (int i = 0; i < parts.size() - 1; ++i)
+    for (unsigned int i = 0; i < parts.size() - 1; ++i)
         strLibraryPath += parts[i] + "/";
 
-#if ATHENA_PLATFORM == ATHENA_PLATFORM_WIN32
-    strLibraryName = strLibraryPath + parts[parts.size() - 1] + ".dll";
-#elif ATHENA_PLATFORM == ATHENA_PLATFORM_APPLE
-    strLibraryName = strLibraryPath + "lib" + parts[parts.size() - 1] + ".dylib";
-#else
-    strLibraryName = strLibraryPath + parts[parts.size() - 1] + ".so";
+    #if ATHENA_PLATFORM == ATHENA_PLATFORM_APPLE
+        strLibraryName = strLibraryPath + parts[parts.size() - 1] + ".dylib";
+    #else
+        strLibraryName = strLibraryPath + parts[parts.size() - 1] + ".so";
+    #endif
 #endif
 
     // Load the dynamic library

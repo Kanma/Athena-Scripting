@@ -24,13 +24,13 @@ if (NOT ATHENA_SCRIPTING_STATIC)
                                  "${ATHENA_SCRIPTING_VERSION_MAJOR}.${ATHENA_SCRIPTING_VERSION_MINOR}.${ATHENA_SCRIPTING_VERSION_PATCH}"
                                  "${ATHENA_SCRIPTING_VERSION_MAJOR}.${ATHENA_SCRIPTING_VERSION_MINOR}.${ATHENA_SCRIPTING_VERSION_PATCH}"
                                  ${SRCS})
+
+    xmake_add_to_list_property(ATHENA_SCRIPTING COMPILE_DEFINITIONS "ATHENA_SCRIPTING_EXPORTS")
 else()
     xmake_create_static_library(ATHENA_SCRIPTING Athena-Scripting ${SRCS})
 endif()
 
 xmake_project_link(ATHENA_SCRIPTING ATHENA_CORE V8)
-
-xmake_add_to_list_property(ATHENA_SCRIPTING COMPILE_DEFINITIONS "ATHENA_EXPORTS")
 
 if (UNIX AND NOT ATHENA_SCRIPTING_STATIC)
     xmake_add_to_property(ATHENA_SCRIPTING LINK_FLAGS "-ldl")
