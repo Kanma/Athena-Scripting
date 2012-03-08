@@ -77,6 +77,15 @@ namespace Scripting {
 
 
     //------------------------------------------------------------------------------------
+    /// @brief  'WeakReferenceCallback', that doesn't delete the C++ object associated
+    ///         with a JavaScript one when the GC kicks in
+    //------------------------------------------------------------------------------------
+    inline void NoOpWeakCallback(v8::Persistent<v8::Value> value, void* data)
+    {
+    }
+
+
+    //------------------------------------------------------------------------------------
     /// @brief  Associate a C++ object to a JavaScript one
     //------------------------------------------------------------------------------------
     template<typename T>
