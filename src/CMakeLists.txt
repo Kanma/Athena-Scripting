@@ -6,6 +6,7 @@ configure_file(${ATHENA_SCRIPTING_SOURCE_DIR}/src/module.cpp.in
 set(SRCS ${XMAKE_BINARY_DIR}/generated/Athena-Scripting/module.cpp
          ScriptingManager.cpp
          Functions.cpp
+         Conversions.cpp
 )
 
 
