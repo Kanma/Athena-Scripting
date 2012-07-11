@@ -10,6 +10,7 @@
 
 #include <Athena-Scripting/Prerequisites.h>
 #include <Athena-Core/Signals/SignalsList.h>
+#include <Athena-Core/Utils/PropertiesList.h>
 #include <v8.h>
 
 
@@ -18,7 +19,7 @@ namespace Athena {
     namespace Signals {
 
         //--------------------------------------------------------------------------------
-        /// @brief  Retrieve the C++ Signals wrapped by a JavaScript one
+        /// @brief  Retrieve the C++ Signal wrapped by a JavaScript one
         //--------------------------------------------------------------------------------
         Signal* ATHENA_SCRIPTING_SYMBOL fromJSSignal(v8::Handle<v8::Value> value);
 
@@ -47,6 +48,25 @@ namespace Athena {
         /// @brief  Wrap a new JavaScript SignalsList around a C++ one
         //--------------------------------------------------------------------------------
         v8::Handle<v8::Value> ATHENA_SCRIPTING_SYMBOL toJavaScript(SignalsList* pList);
+    }
+
+
+    namespace Utils {
+
+        //--------------------------------------------------------------------------------
+        /// @brief  Retrieve the C++ PropertiesList wrapped by a JavaScript one
+        //--------------------------------------------------------------------------------
+        PropertiesList* ATHENA_SCRIPTING_SYMBOL fromJSPropertiesList(v8::Handle<v8::Value> value);
+
+        //--------------------------------------------------------------------------------
+        /// @brief  Create a new JavaScript PropertiesList (wrapping a new C++ one)
+        //--------------------------------------------------------------------------------
+        v8::Handle<v8::Object> ATHENA_SCRIPTING_SYMBOL createJSPropertiesList();
+
+        //--------------------------------------------------------------------------------
+        /// @brief  Wrap a new JavaScript PropertiesList around a C++ one
+        //--------------------------------------------------------------------------------
+        v8::Handle<v8::Value> ATHENA_SCRIPTING_SYMBOL toJavaScript(PropertiesList* pList);
     }
 }
 

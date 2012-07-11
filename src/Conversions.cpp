@@ -11,6 +11,7 @@
 
 using namespace Athena::Signals;
 using namespace Athena::Scripting;
+using namespace Athena::Utils;
 using namespace v8;
 
 
@@ -99,6 +100,54 @@ Handle<Value> Athena::Signals::toJavaScript(SignalsList* pList)
 
     Handle<FunctionTemplate> func = ScriptingManager::getSingletonPtr()->getClassTemplate(
                                                         "Athena.Signals.SignalsList");
+
+    Handle<Value> argv[1];
+    argv[0] = External::Wrap(pList);
+
+    Handle<Object> jsList = func->GetFunction()->NewInstance(1, argv);
+
+    return handle_scope.Close(jsList);
+}
+
+//-----------------------------------------------------------------------
+
+PropertiesList* Athena::Utils::fromJSPropertiesList(Handle<Value> value)
+{
+    if (value->IsObject())
+    {
+        PropertiesList* pList = 0;
+        GetObjectPtr(value, &pList);
+        return pList;
+    }
+
+    return 0;
+}
+
+//-----------------------------------------------------------------------
+
+Handle<Object> Athena::Utils::createJSPropertiesList()
+{
+    HandleScope handle_scope;
+
+    Handle<FunctionTemplate> func = ScriptingManager::getSingletonPtr()->getClassTemplate(
+                                                        "Athena.Signals.PropertiesList");
+
+    Handle<Object> jsList = func->GetFunction()->NewInstance();
+
+    return handle_scope.Close(jsList);
+}
+
+//-----------------------------------------------------------------------
+
+Handle<Value> Athena::Utils::toJavaScript(PropertiesList* pList)
+{
+    // Assertions
+    assert(pList);
+
+    HandleScope handle_scope;
+
+    Handle<FunctionTemplate> func = ScriptingManager::getSingletonPtr()->getClassTemplate(
+                                                        "Athena.Signals.PropertiesList");
 
     Handle<Value> argv[1];
     argv[0] = External::Wrap(pList);
