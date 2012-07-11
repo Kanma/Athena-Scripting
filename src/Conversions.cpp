@@ -8,6 +8,8 @@
 #include <Athena-Scripting/Conversions.h>
 #include <Athena-Scripting/ScriptingManager.h>
 #include <Athena-Scripting/Utils.h>
+#include <Athena-Core/Utils/PropertiesList.h>
+#include <Athena-Core/Utils/Describable.h>
 
 using namespace Athena::Signals;
 using namespace Athena::Scripting;
@@ -111,6 +113,54 @@ Handle<Value> Athena::Signals::toJavaScript(SignalsList* pList)
 
 //-----------------------------------------------------------------------
 
+Describable* Athena::Utils::fromJSDescribable(Handle<Value> value)
+{
+    if (value->IsObject())
+    {
+        Describable* pDescribable = 0;
+        GetObjectPtr(value, &pDescribable);
+        return pDescribable;
+    }
+
+    return 0;
+}
+
+//-----------------------------------------------------------------------
+
+Handle<Object> Athena::Utils::createJSDescribable()
+{
+    HandleScope handle_scope;
+
+    Handle<FunctionTemplate> func = ScriptingManager::getSingletonPtr()->getClassTemplate(
+                                                        "Athena.Utils.Describable");
+
+    Handle<Object> jsDescribable = func->GetFunction()->NewInstance();
+
+    return handle_scope.Close(jsDescribable);
+}
+
+//-----------------------------------------------------------------------
+
+Handle<Value> Athena::Utils::toJavaScript(Describable* pDescribable)
+{
+    // Assertions
+    assert(pDescribable);
+
+    HandleScope handle_scope;
+
+    Handle<FunctionTemplate> func = ScriptingManager::getSingletonPtr()->getClassTemplate(
+                                                        "Athena.Utils.Describable");
+
+    Handle<Value> argv[1];
+    argv[0] = External::Wrap(pDescribable);
+
+    Handle<Object> jsDescribable = func->GetFunction()->NewInstance(1, argv);
+
+    return handle_scope.Close(jsDescribable);
+}
+
+//-----------------------------------------------------------------------
+
 PropertiesList* Athena::Utils::fromJSPropertiesList(Handle<Value> value)
 {
     if (value->IsObject())
@@ -130,7 +180,7 @@ Handle<Object> Athena::Utils::createJSPropertiesList()
     HandleScope handle_scope;
 
     Handle<FunctionTemplate> func = ScriptingManager::getSingletonPtr()->getClassTemplate(
-                                                        "Athena.Signals.PropertiesList");
+                                                        "Athena.Utils.PropertiesList");
 
     Handle<Object> jsList = func->GetFunction()->NewInstance();
 
@@ -147,7 +197,7 @@ Handle<Value> Athena::Utils::toJavaScript(PropertiesList* pList)
     HandleScope handle_scope;
 
     Handle<FunctionTemplate> func = ScriptingManager::getSingletonPtr()->getClassTemplate(
-                                                        "Athena.Signals.PropertiesList");
+                                                        "Athena.Utils.PropertiesList");
 
     Handle<Value> argv[1];
     argv[0] = External::Wrap(pList);

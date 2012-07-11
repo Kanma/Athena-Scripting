@@ -9,8 +9,7 @@
 #define _ATHENA_SCRIPTING_CONVERSIONS_H_
 
 #include <Athena-Scripting/Prerequisites.h>
-#include <Athena-Core/Signals/SignalsList.h>
-#include <Athena-Core/Utils/PropertiesList.h>
+#include <Athena-Core/Prerequisites.h>
 #include <v8.h>
 
 
@@ -52,6 +51,22 @@ namespace Athena {
 
 
     namespace Utils {
+
+        //--------------------------------------------------------------------------------
+        /// @brief  Retrieve the C++ Describable wrapped by a JavaScript one
+        //--------------------------------------------------------------------------------
+        Describable* ATHENA_SCRIPTING_SYMBOL fromJSDescribable(v8::Handle<v8::Value> value);
+
+        //--------------------------------------------------------------------------------
+        /// @brief  Create a new JavaScript Describable (wrapping a new C++ one)
+        //--------------------------------------------------------------------------------
+        v8::Handle<v8::Object> ATHENA_SCRIPTING_SYMBOL createJSDescribable();
+
+        //--------------------------------------------------------------------------------
+        /// @brief  Wrap a new JavaScript Describable around a C++ one
+        //--------------------------------------------------------------------------------
+        v8::Handle<v8::Value> ATHENA_SCRIPTING_SYMBOL toJavaScript(Describable* pDescribable);
+
 
         //--------------------------------------------------------------------------------
         /// @brief  Retrieve the C++ PropertiesList wrapped by a JavaScript one
