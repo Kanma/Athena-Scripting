@@ -20,12 +20,12 @@ namespace Athena {
         //--------------------------------------------------------------------------------
         /// @brief  Retrieve the C++ Signal wrapped by a JavaScript one
         //--------------------------------------------------------------------------------
-        Signal* ATHENA_SCRIPTING_SYMBOL fromJSSignal(v8::Handle<v8::Value> value);
+        ATHENA_SCRIPTING_SYMBOL Signal* fromJSSignal(v8::Handle<v8::Value> value);
 
         //--------------------------------------------------------------------------------
         /// @brief  Create a new JavaScript Signal (wrapping a new C++ one)
         //--------------------------------------------------------------------------------
-        v8::Handle<v8::Object> ATHENA_SCRIPTING_SYMBOL createJSSignal();
+        ATHENA_SCRIPTING_SYMBOL v8::Handle<v8::Object> createJSSignal();
 
         //--------------------------------------------------------------------------------
         /// @brief  Wrap a new JavaScript Signal around a C++ one
@@ -36,7 +36,7 @@ namespace Athena {
         //--------------------------------------------------------------------------------
         /// @brief  Retrieve the C++ SignalsList wrapped by a JavaScript one
         //--------------------------------------------------------------------------------
-        SignalsList* ATHENA_SCRIPTING_SYMBOL fromJSSignalsList(v8::Handle<v8::Value> value);
+        ATHENA_SCRIPTING_SYMBOL SignalsList* fromJSSignalsList(v8::Handle<v8::Value> value);
 
         //--------------------------------------------------------------------------------
         /// @brief  Create a new JavaScript SignalsList (wrapping a new C++ one)
@@ -55,7 +55,7 @@ namespace Athena {
         //--------------------------------------------------------------------------------
         /// @brief  Retrieve the C++ Describable wrapped by a JavaScript one
         //--------------------------------------------------------------------------------
-        Describable* ATHENA_SCRIPTING_SYMBOL fromJSDescribable(v8::Handle<v8::Value> value);
+        ATHENA_SCRIPTING_SYMBOL Describable* fromJSDescribable(v8::Handle<v8::Value> value);
 
         //--------------------------------------------------------------------------------
         /// @brief  Create a new JavaScript Describable (wrapping a new C++ one)
@@ -71,7 +71,7 @@ namespace Athena {
         //--------------------------------------------------------------------------------
         /// @brief  Retrieve the C++ PropertiesList wrapped by a JavaScript one
         //--------------------------------------------------------------------------------
-        PropertiesList* ATHENA_SCRIPTING_SYMBOL fromJSPropertiesList(v8::Handle<v8::Value> value);
+        ATHENA_SCRIPTING_SYMBOL PropertiesList* fromJSPropertiesList(v8::Handle<v8::Value> value);
 
         //--------------------------------------------------------------------------------
         /// @brief  Create a new JavaScript PropertiesList (wrapping a new C++ one)
