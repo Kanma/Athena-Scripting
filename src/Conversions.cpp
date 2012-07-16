@@ -56,7 +56,7 @@ Handle<Value> Athena::Signals::toJavaScript(Signal* pSignal)
                                                         "Athena.Signals.Signal");
 
     Handle<Value> argv[1];
-    argv[0] = External::Wrap(pSignal);
+    argv[0] = External::New(pSignal);
 
     Handle<Object> jsSignal = func->GetFunction()->NewInstance(1, argv);
 
@@ -104,7 +104,7 @@ Handle<Value> Athena::Signals::toJavaScript(SignalsList* pList)
                                                         "Athena.Signals.SignalsList");
 
     Handle<Value> argv[1];
-    argv[0] = External::Wrap(pList);
+    argv[0] = External::New(pList);
 
     Handle<Object> jsList = func->GetFunction()->NewInstance(1, argv);
 
@@ -152,7 +152,7 @@ Handle<Value> Athena::Utils::toJavaScript(Describable* pDescribable)
                                                         "Athena.Utils.Describable");
 
     Handle<Value> argv[1];
-    argv[0] = External::Wrap(pDescribable);
+    argv[0] = External::New(pDescribable);
 
     Handle<Object> jsDescribable = func->GetFunction()->NewInstance(1, argv);
 
@@ -200,7 +200,9 @@ Handle<Value> Athena::Utils::toJavaScript(PropertiesList* pList)
                                                         "Athena.Utils.PropertiesList");
 
     Handle<Value> argv[1];
-    argv[0] = External::Wrap(pList);
+    argv[0] = External::New(pList);
+
+	printf("%d\n", argv[0]->IsExternal());
 
     Handle<Object> jsList = func->GetFunction()->NewInstance(1, argv);
 
