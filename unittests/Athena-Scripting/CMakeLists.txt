@@ -3,6 +3,11 @@ xmake_import_search_paths(ATHENA_SCRIPTING)
 xmake_import_search_paths(UNITTEST_CPP)
 
 
+# List the header files
+set(HEADERS environments/ScriptingTestEnvironment.h
+)
+
+
 # List the source files
 set(SRCS main.cpp
          tests/ScriptingManager.cpp
@@ -11,7 +16,7 @@ set(SRCS main.cpp
 
 
 # Declaration of the executable
-xmake_create_executable(UNITTESTS_ATHENA_SCRIPTING UnitTests-Athena-Scripting ${SRCS})
+xmake_create_executable(UNITTESTS_ATHENA_SCRIPTING UnitTests-Athena-Scripting ${HEADERS} ${SRCS})
 
 xmake_project_link(UNITTESTS_ATHENA_SCRIPTING UNITTEST_CPP)
 xmake_project_link(UNITTESTS_ATHENA_SCRIPTING ATHENA_SCRIPTING)
