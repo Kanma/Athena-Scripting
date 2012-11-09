@@ -202,8 +202,6 @@ Handle<Value> Athena::Utils::toJavaScript(PropertiesList* pList)
     Handle<Value> argv[1];
     argv[0] = External::New(pList);
 
-	printf("%d\n", argv[0]->IsExternal());
-
     Handle<Object> jsList = func->GetFunction()->NewInstance(1, argv);
 
     return handle_scope.Close(jsList);

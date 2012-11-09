@@ -6,34 +6,13 @@ project(ATHENA_SCRIPTING)
 
 set(ATHENA_SCRIPTING_ENABLED ON CACHE BOOL "Compile the scripting module of Athena")
 
-if (NOT DEFINED ATHENA_SCRIPTING_STATIC)
-    set(ATHENA_SCRIPTING_STATIC OFF CACHE BOOL "Build Athena-Scripting as a static library")
-endif()
-
-
-##########################################################################################
-# Setup the dependencies
-
-set(COMPILE_AS_STATIC ON)
-if (WIN32)
-    set(COMPILE_AS_STATIC OFF)
-endif()
-
-if (NOT DEFINED ATHENA_MATH_STATIC)
-    set(ATHENA_MATH_STATIC ${COMPILE_AS_STATIC})
-endif()
-
-if (NOT DEFINED ATHENA_CORE_STATIC)
-    set(ATHENA_CORE_STATIC ${COMPILE_AS_STATIC})
-endif()
-
 
 ##########################################################################################
 # Library version
 
 set(ATHENA_SCRIPTING_VERSION_MAJOR 1)
 set(ATHENA_SCRIPTING_VERSION_MINOR 1)
-set(ATHENA_SCRIPTING_VERSION_PATCH 1)
+set(ATHENA_SCRIPTING_VERSION_PATCH 2)
 set(ATHENA_SCRIPTING_VERSION_SUFFIX "")
 
 
