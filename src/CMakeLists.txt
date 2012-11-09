@@ -30,20 +30,16 @@ xmake_import_search_paths(V8)
 
 
 # Declaration of the library
-if (NOT ATHENA_SCRIPTING_STATIC)
-    xmake_create_dynamic_library(ATHENA_SCRIPTING Athena-Scripting
-                                 "${ATHENA_SCRIPTING_VERSION_MAJOR}.${ATHENA_SCRIPTING_VERSION_MINOR}.${ATHENA_SCRIPTING_VERSION_PATCH}"
-                                 "${ATHENA_SCRIPTING_VERSION_MAJOR}.${ATHENA_SCRIPTING_VERSION_MINOR}.${ATHENA_SCRIPTING_VERSION_PATCH}"
-                                 ${HEADERS} ${SRCS})
+xmake_create_dynamic_library(ATHENA_SCRIPTING Athena-Scripting
+                             "${ATHENA_SCRIPTING_VERSION_MAJOR}.${ATHENA_SCRIPTING_VERSION_MINOR}.${ATHENA_SCRIPTING_VERSION_PATCH}"
+                             "${ATHENA_SCRIPTING_VERSION_MAJOR}.${ATHENA_SCRIPTING_VERSION_MINOR}.${ATHENA_SCRIPTING_VERSION_PATCH}"
+                             ${HEADERS} ${SRCS})
 
-    xmake_add_to_list_property(ATHENA_SCRIPTING COMPILE_DEFINITIONS "ATHENA_SCRIPTING_EXPORTS")
-else()
-    xmake_create_static_library(ATHENA_SCRIPTING Athena-Scripting ${HEADERS} ${SRCS})
-endif()
+xmake_add_to_list_property(ATHENA_SCRIPTING COMPILE_DEFINITIONS "ATHENA_SCRIPTING_EXPORTS")
 
 xmake_project_link(ATHENA_SCRIPTING ATHENA_CORE V8)
 
-if (UNIX AND NOT ATHENA_SCRIPTING_STATIC)
+if (UNIX)
     xmake_add_to_property(ATHENA_SCRIPTING LINK_FLAGS "-ldl")
 endif()
 

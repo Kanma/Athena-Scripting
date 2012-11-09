@@ -6,10 +6,6 @@ project(ATHENA_SCRIPTING)
 
 set(ATHENA_SCRIPTING_ENABLED ON CACHE BOOL "Compile the scripting module of Athena")
 
-if (NOT DEFINED ATHENA_SCRIPTING_STATIC)
-    set(ATHENA_SCRIPTING_STATIC OFF CACHE BOOL "Build Athena-Scripting as a static library")
-endif()
-
 
 ##########################################################################################
 # Library version
