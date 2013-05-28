@@ -35,6 +35,7 @@ Athena-Scripting requires the following dependencies:
    - Athena-Core
    - V8
    - UnitTest++
+   - rapidjson
 
 They are provided as GIT submodules of this repository and will be compiled
 automatically during the compilation of Athena-Scripting.
