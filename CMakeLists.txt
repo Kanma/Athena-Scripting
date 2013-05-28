@@ -12,7 +12,7 @@ set(ATHENA_SCRIPTING_ENABLED ON CACHE BOOL "Compile the scripting module of Athe
 
 set(ATHENA_SCRIPTING_VERSION_MAJOR 1)
 set(ATHENA_SCRIPTING_VERSION_MINOR 1)
-set(ATHENA_SCRIPTING_VERSION_PATCH 2)
+set(ATHENA_SCRIPTING_VERSION_PATCH 3)
 set(ATHENA_SCRIPTING_VERSION_SUFFIX "")
 
 
@@ -45,6 +45,7 @@ Athena-Scripting requires the following dependencies:
    - Athena-Core
    - V8
    - UnitTest++
+   - rapidjson
 They are provided as GIT submodules of this repository.
 Did you forgot to execute the following commands?
    git submodule init
