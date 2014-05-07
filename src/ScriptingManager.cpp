@@ -56,8 +56,11 @@ static const char* __CONTEXT__ = "Scripting manager";
 /********************************** STATIC ATTRIBUTES ***********************************/
 
 /// The instance of the singleton
-template<> ScriptingManager* Singleton<ScriptingManager>::ms_Singleton = 0;
-
+namespace Athena {
+    namespace Utils {
+        template<> ScriptingManager* Singleton<ScriptingManager>::ms_Singleton = 0;
+    }
+}
 
 
 /****************************** CONSTRUCTION / DESTRUCTION ******************************/
