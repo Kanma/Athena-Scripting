@@ -99,3 +99,11 @@ endfunction()
 add_subdirectory(dependencies)
 add_subdirectory(src)
 add_subdirectory(unittests)
+
+
+if (ATHENA_SCRIPTING_ENABLED)
+    add_subdirectory("${XMAKE_DEPENDENCIES_DIR}/Athena-Math/scripting")
+    add_subdirectory("${XMAKE_DEPENDENCIES_DIR}/Athena-Math/unittests/scripting")
+    add_subdirectory("${XMAKE_DEPENDENCIES_DIR}/Athena-Core/scripting")
+    add_subdirectory("${XMAKE_DEPENDENCIES_DIR}/Athena-Core/unittests/scripting")
+endif()
