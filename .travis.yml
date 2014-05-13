@@ -13,3 +13,6 @@ script:
   - cd build
   - cmake -D CMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} .. && make
 
+branches:
+  except:
+    - /\d\.\d\.\d/
