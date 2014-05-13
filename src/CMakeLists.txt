@@ -40,13 +40,9 @@ xmake_add_to_list_property(ATHENA_SCRIPTING COMPILE_DEFINITIONS "ATHENA_SCRIPTIN
 xmake_project_link(ATHENA_SCRIPTING ATHENA_CORE V8)
 
 if (UNIX)
-    xmake_add_to_property(ATHENA_SCRIPTING LINK_FLAGS "-ldl")
+    xmake_link_libraries(ATHENA_SCRIPTING dl)
 endif()
 
 
 # Exportations
 xmake_export_include_paths(ATHENA_SCRIPTING ${INCLUDE_PATHS})
-
-if (UNIX)
-    xmake_export_link_flags(ATHENA_SCRIPTING "-ldl")
-endif()

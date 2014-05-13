@@ -12,7 +12,7 @@ set(ATHENA_SCRIPTING_ENABLED ON CACHE BOOL "Compile the scripting module of Athe
 
 set(ATHENA_SCRIPTING_VERSION_MAJOR 1)
 set(ATHENA_SCRIPTING_VERSION_MINOR 1)
-set(ATHENA_SCRIPTING_VERSION_PATCH 3)
+set(ATHENA_SCRIPTING_VERSION_PATCH 4)
 set(ATHENA_SCRIPTING_VERSION_SUFFIX "")
 
 
@@ -99,3 +99,11 @@ endfunction()
 add_subdirectory(dependencies)
 add_subdirectory(src)
 add_subdirectory(unittests)
+
+
+if (ATHENA_SCRIPTING_ENABLED)
+    add_subdirectory("${XMAKE_DEPENDENCIES_DIR}/Athena-Math/scripting")
+    add_subdirectory("${XMAKE_DEPENDENCIES_DIR}/Athena-Math/unittests/scripting")
+    add_subdirectory("${XMAKE_DEPENDENCIES_DIR}/Athena-Core/scripting")
+    add_subdirectory("${XMAKE_DEPENDENCIES_DIR}/Athena-Core/unittests/scripting")
+endif()
